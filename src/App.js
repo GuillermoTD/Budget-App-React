@@ -8,7 +8,7 @@ export default function App() {
     <>
       <Container className="my-3 mx-auto">
         <Stack direction="horizontal" gap="2" className="mb-4">
-          <h1 className="me-auto">Budgets</h1>
+          <h1 className="me-auto">Budgetss</h1>
           <Button
             onClick={() => setShowBudgetModal(!showBudgetModal)}
             variant="primary"
