@@ -1,7 +1,16 @@
 import { Button, Card, ProgressBar, Stack } from "react-bootstrap";
 import { currencyFormatter } from "../utils";
-
-const BudgetCard = ({ name, amount, max, defaultBg }) => {
+import { Container } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+const BudgetCard = ({
+  name,
+  amount,
+  max,
+  defaultBg,
+  onAddBudgetClick,
+  hideButtons
+}) => {
   const { Body, Title } = Card;
 
   const getProgressBarColor = (amount, max) => {
@@ -15,7 +24,7 @@ const BudgetCard = ({ name, amount, max, defaultBg }) => {
   if (amount > max) {
     classNames.push("bg-danger", "bg-opacity-10");
   } else if (defaultBg) {
-    classNames.push("bg-light");
+    classNames.push("bg-light", "mb-2");
   }
 
   return (
@@ -38,10 +47,14 @@ const BudgetCard = ({ name, amount, max, defaultBg }) => {
           max={max}
           now={amount}
         />
-        <Stack direction="horizontal" gap="2" className="mt-4">
-          <Button variant="outline-primary">Add Expense</Button>
-          <Button variant="outline-secondary">View Expenses</Button>
-        </Stack>
+        {!hideButtons && (
+          <Stack direction="horizontal" gap="2" className="mt-4">
+            <Button variant="outline-primary" onClick={onAddBudgetClick}>
+              Add Expense
+            </Button>
+            <Button variant="outline-secondary">View Expenses</Button>
+          </Stack>
+        )}
       </Body>
     </Card>
   );

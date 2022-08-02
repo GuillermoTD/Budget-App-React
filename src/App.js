@@ -2,41 +2,78 @@ import { Button, Container, Stack } from "react-bootstrap";
 import AddBudgetModal from "./components/AddBudgetModal";
 import BudgetCard from "./components/BudgetCard";
 import { useState } from "react";
+import { useBudget } from "./Contexts/BudgetContext";
+import AddExpenseModal from "./components/AddExpenseModal";
+import TotalBudgetCard from "./components/TotalBudgetCard";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 export default function App() {
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState();
+  const { budgets, expenses, getBudgetExpenses } = useBudget();
+
+  const openAddExpenseModal = (budgetId) => {
+    setShowExpenseModal(true);
+    setAddExpenseModalBudgetId(budgetId);
+  };
   return (
     <>
       <Container className="my-3 mx-auto">
         <Stack direction="horizontal" gap="2" className="mb-4">
-          <h1 className="me-auto">Budgetss</h1>
+          <h1 className="me-auto">Budgets</h1>
           <Button
             onClick={() => setShowBudgetModal(!showBudgetModal)}
             variant="primary"
           >
             Add Budget
           </Button>
-          <Button variant="outline-primary">Add Expense</Button>
+          <Button
+            // onClick={() => setShowExpenseModal(!showExpenseModal)}
+            onClick={openAddExpenseModal}
+            variant="outline-primary"
+          >
+            Add Expense
+          </Button>
         </Stack>
-        <div
-          style={{
-            display: "flex",
-            gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))",
-            gap: "1rem",
-            alignItems: "flex-start"
-          }}
-        >
-          <BudgetCard
-            name="Entertaiment"
-            amount={100}
-            max={500}
-            defaultBg
-          ></BudgetCard>
-        </div>
+        <Container>
+          <Row>
+            <Col lg={true}>
+              {budgets.map((budget) => {
+                const amount = getBudgetExpenses(budget.id).reduce(
+                  (total, expense) => total + expense.amountExpense,
+                  0
+                );
+                console.log(amount);
+
+                return (
+                  <BudgetCard
+                    key={budget.id}
+                    name={budget.budgetName}
+                    amount={amount}
+                    max={budget.maxSpending}
+                    defaultBg
+                    onAddBudgetClick={() => openAddExpenseModal()}
+                  ></BudgetCard>
+                );
+              })}
+            </Col>
+          </Row>
+        </Container>
+        <TotalBudgetCard />
       </Container>
+
       <AddBudgetModal
         show={showBudgetModal}
-        handleClose={() => setShowBudgetModal(false)}
-      ></AddBudgetModal>
+        handleClose={() => setShowBudgetModal(!showBudgetModal)}
+        setModal={() => setShowBudgetModal(!showBudgetModal)}
+      />
+      <AddExpenseModal
+        show={showExpenseModal}
+        handleClose={() => setShowExpenseModal(!showExpenseModal)}
+        // onAddExpenseClick={()=>set}
+      />
     </>
   );
 }
