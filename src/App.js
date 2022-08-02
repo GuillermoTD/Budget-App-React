@@ -38,28 +38,26 @@ export default function App() {
           </Button>
         </Stack>
         <Container>
-          <Row>
-            <Col lg={true}>
-              {budgets.map((budget) => {
-                const amount = getBudgetExpenses(budget.id).reduce(
-                  (total, expense) => total + expense.amountExpense,
-                  0
-                );
-                console.log(amount);
+          {budgets.map((budget) => {
+            const amount = getBudgetExpenses(budget.id).reduce(
+              (total, expense) => total + expense.amountExpense,
+              0
+            );
+            console.log(amount);
 
-                return (
-                  <BudgetCard
-                    key={budget.id}
-                    name={budget.budgetName}
-                    amount={amount}
-                    max={budget.maxSpending}
-                    defaultBg
-                    onAddBudgetClick={() => openAddExpenseModal()}
-                  ></BudgetCard>
-                );
-              })}
-            </Col>
-          </Row>
+            return (
+              <Col lg={4} sm={8} md={4}>
+                <BudgetCard
+                  key={budget.id}
+                  name={budget.budgetName}
+                  amount={amount}
+                  max={budget.maxSpending}
+                  defaultBg
+                  onAddBudgetClick={() => openAddExpenseModal()}
+                ></BudgetCard>
+              </Col>
+            );
+          })}
         </Container>
         <TotalBudgetCard />
       </Container>
